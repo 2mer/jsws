@@ -1,8 +1,24 @@
 import { useEffect } from "react";
-import type { Level } from "../game/Level";
+import { checkSolution, Level } from "../game/Level";
 
-function LevelContent({ level }: { level: Level }) {
-	useEffect(() => { }, [level]);
+function LevelContent({ level }: { level: Level<any, any> }) {
+	useEffect(() => {
+		Object.defineProperty(window, 'solution', {
+			configurable: true,
+			set(v) {
+				checkSolution(level, v);
+			},
+			get() {
+				return (solution: any) => {
+					checkSolution(level, solution)
+				}; 
+			}
+		})
+
+		return () => {
+			delete (window as any).solution
+		}
+	}, [level]);
 
 	return null;
 }
