@@ -10,9 +10,9 @@ function App() {
 
 	return (
 		<>
-			<div className="w-full h-full flex flex-col">
+			<div className="w-full h-full flex flex-col relative p-4">
 				<LevelPicker level={level} levelIndex={levelIndex} setLevelIndex={setLevelIndex} />
-				<LevelContent level={level}/>
+				<LevelContent level={level} />
 			</div>
 		</>
 	)
