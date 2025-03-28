@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sgty/kontext-react": "^0.0.0",
+    "@sgty/modals": "^1.0.0",
+    "@sgty/sigma": "^1.0.2",
     "@tailwindcss/vite": "^4.0.15",
     "@types/chai": "^5.2.0",
     "chai": "^5.2.0",

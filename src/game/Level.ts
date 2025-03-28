@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 import { expect } from "chai";
+import { getSolutions, saveSolution } from "./solutions";
+import { modals } from "@sgty/modals";
+import LevelCompleteModal from "../components/LevelCompleteModal";
 
 const LEVEL_ROUND_COUNT = 100;
 
@@ -8,7 +11,7 @@ export type Level<T = any, R = any> = {
 	description: ReactNode;
 	name: ReactNode;
 	rounds: number;
-	id?: string;
+	id: string;
 };
 export function Level<T, R = T>(
 	{
@@ -18,7 +21,7 @@ export function Level<T, R = T>(
 	}: { description: ReactNode; name: ReactNode; rounds?: number },
 	generateRound: () => Round<T, R>,
 ) {
-	return { description, generateRound, name, rounds };
+	return { description, generateRound, name, rounds, id: "" };
 }
 
 export async function checkSolution<T, R>(
@@ -35,13 +38,20 @@ export async function checkSolution<T, R>(
 
 				round.expect(result);
 			} catch (err) {
-				console.error(`[${i + 1}/${LEVEL_ROUND_COUNT}] failed`);
+				console.error(`[${i + 1}/${level.rounds}] failed`);
 				console.error(err);
 				throw err;
 			}
 
-			console.log(`[${i + 1}/${LEVEL_ROUND_COUNT}] passed`);
+			console.log(`[${i + 1}/${level.rounds}] passed`);
 		}
+
+		// solution passed!
+		saveSolution(level.id as string, solution);
+		const modal = modals.open(LevelCompleteModal, {
+			level,
+			onClose: () => modal.close(),
+		});
 	} catch (err) {
 		// throw err;
 	} finally {
@@ -73,4 +83,8 @@ export function MatchRound<T, R>(
 		},
 		example,
 	};
+}
+
+export function isLevelCleared(level: Level) {
+	return Boolean(getSolutions(level.id).length);
 }
